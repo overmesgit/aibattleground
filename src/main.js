@@ -1,81 +1,113 @@
-// Import the main PixiJS library
-import * as PIXI from 'pixi.js';
+import * as PIXI from "pixi.js";
 
-// Import the function to create the Pixi Application
-import { createPixiApp } from './core/application.js';
-// If using the class approach:
-// import { PixiApplication } from './core/application.js';
+import { createPixiApp } from "./core/application.js";
+import { generateMap } from "./game/arena.js";
 
-// --- Global Variables (Consider managing state better later) ---
+import { loadAssets } from "./core/loader.js";
+
 let app;
 
-// --- Initialization Function ---
-async function initGame() {
-    console.log("Initializing game...");
+const FRAME_WIDTH = 100;
+const FRAME_HEIGHT = 100;
 
-    // --- Setup PixiJS Application ---
-    // Use the imported function
-    app = await createPixiApp({
-        // Override defaults if needed, e.g.:
-        // width: 1024,
-        // height: 768,
-        // backgroundColor: 0x000000, // Black background
-    });
+const ANIMATIONS = {
+  idle: [0, 6],
+  walk: [1, 8],
+  attack1: [2, 6],
+  attack2: [3, 6],
+  shoot: [4, 9],
+  heal: [5, 4],
+  die: [6, 4],
+};
 
-    // If using the class approach:
-    /*
-    const pixiAppInstance = new PixiApplication({
-        // options...
-    });
-    await pixiAppInstance.init();
-    app = pixiAppInstance.app; // Get the raw PIXI.Application instance
-    */
+function parseSpritesheet(baseTexture, animations) {
+  const animationTextures = {};
 
-    // --- Asset Loading (Placeholder) ---
-    // TODO: Import and use the loader module from './core/loader.js'
-    console.log("Placeholder for asset loading.");
-    // Example (needs loader.js implementation):
-    // import { AssetLoader } from './core/loader.js';
-    // const loader = new AssetLoader(app);
-    // await loader.loadAssets();
+  for (const [name, [rowIndex, frameCount]] of Object.entries(animations)) {
+    const textures = [];
+    for (let i = 0; i < frameCount; i++) {
+      const frameX = i * FRAME_WIDTH;
+      const frameY = rowIndex * FRAME_HEIGHT;
+      const frameRect = new PIXI.Rectangle(
+        frameX,
+        frameY,
+        FRAME_WIDTH,
+        FRAME_HEIGHT,
+      );
 
-    // --- Game Setup (Placeholder) ---
-    // TODO: Import and use GameManager from './game/gameManager.js'
-    console.log("Placeholder for game setup.");
-    // Example (needs gameManager.js implementation):
-    // import { GameManager } from './game/gameManager.js';
-    // const gameManager = new GameManager(app);
-    // gameManager.startGame();
-
-    // --- Simple Test Graphic (Remove later) ---
-    const testBunny = PIXI.Sprite.from('https://pixijs.com/assets/bunny.png'); // Uses Pixi's loader implicitly
-    testBunny.anchor.set(0.5);
-    testBunny.x = app.screen.width / 2;
-    testBunny.y = app.screen.height / 2;
-    app.stage.addChild(testBunny);
-    console.log("Test bunny added to stage.");
-
-    // --- Start Game Loop (PixiJS handles this internally) ---
-    console.log("Game initialization complete.");
-
+      textures.push(
+        new PIXI.Texture({
+          source: baseTexture,
+          frame: frameRect,
+        }),
+      );
+    }
+    animationTextures[name] = textures;
+  }
+  return animationTextures;
 }
 
-// --- Start the application ---
-// Make sure PixiJS is installed (e.g., via npm) for the imports to work
-// Run this script after the DOM is ready (script type="module" handles this)
+async function initGame() {
+  console.log("Initializing game...");
 
-// Add error handling for initialization
-try {
-    initGame();
-} catch (error) {
-    console.error("Failed to initialize game:", error);
-    // Display error to the user on the page
-    const errorDiv = document.createElement('div');
-    errorDiv.style.color = 'red';
-    errorDiv.style.position = 'absolute';
-    errorDiv.style.top = '10px';
-    errorDiv.style.left = '10px';
-    errorDiv.style.fontFamily = 'sans-serif';
+  app = await createPixiApp({
+    width: 960,
+    height: 960,
+    backgroundColor: "72751b00",
+  });
+
+  const assetsToLoad = [
+    {
+      alias: "solderSheet",
+      src: "assets/images/tinyrpg/Characters(100x100)/Soldier/Soldier/Soldier.png",
+    },
+    {
+      alias: "tileset",
+      src: "assets/images/Texture/TX Tileset Grass.png",
+    },
+  ];
+
+  try {
+    const loadedResources = await loadAssets(assetsToLoad);
+
+    const solderBaseTexture = loadedResources.solderSheet;
+    solderBaseTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+    console.log(
+      "Soldier Base Texture dimensions:",
+      solderBaseTexture.width,
+      solderBaseTexture.height,
+    );
+
+    const soldierAnimations = parseSpritesheet(
+      solderBaseTexture.baseTexture,
+      ANIMATIONS,
+    );
+
+    const map = generateMap(app);
+    app.stage.addChild(map);
+
+    const soldier = new PIXI.AnimatedSprite(soldierAnimations.idle);
+
+    soldier.anchor.set(0.5);
+    soldier.x = app.screen.width / 2;
+    soldier.y = app.screen.height / 2;
+    soldier.scale.set(3);
+    soldier.animationSpeed = 0.15;
+    soldier.loop = true;
+
+    app.stage.addChild(soldier);
+    soldier.play();
+  } catch (error) {
+    const errorDiv = document.createElement("div");
+    errorDiv.style.color = "red";
+    errorDiv.style.position = "absolute";
+    errorDiv.style.top = "10px";
+    errorDiv.style.left = "10px";
+    errorDiv.style.fontFamily = "sans-serif";
     errorDiv.textContent = `Error initializing game: ${error.message}`;
     document.body.appendChild(errorDiv);
+  }
 }
+
+initGame();

@@ -1,0 +1,36 @@
+# .goosehints - Concise Guidelines for Goose AI Agent
+
+## Interaction Workflow (MANDATORY)
+
+1.  Plan: Analyze request -> Create step-by-step plan.
+2.  Confirm Plan: Present plan to me. Wait for my explicit approval before coding.
+3.  Implement Step: Code one single step from the approved plan.
+4.  Confirm Step: Present completed step (code/diff/explanation). Wait for my explicit approval before next step.
+5.  Repeat: Continue steps 3-4 until plan is complete.
+
+Key: Always wait for explicit confirmation *before* proceeding to the next action (planning -> coding, step -> next step).
+
+## Project Context (Update As Needed)
+
+*   Goal: [Project Purpose]
+*   Tech: [Languages, Frameworks, Libs]
+*   Architecture: [e.g., Microservices, Clean Arch, MVC]
+*   Style: [e.g., Effective Go, Linter Config]
+*   Testing: [e.g., Unit tests required, Coverage target]
+*   Deployment: [e.g., Docker, K8s, Serverless]
+*   Secrets: [Handling method, e.g., Env Vars, Vault]
+
+## Core Guidelines
+
+*   Quality: Clean Code, SOLID, meaningful names, small functions.
+*   Security: Prioritize secure practices (input validation, auth, secrets). Ask if unsure.
+*   Errors: Robust, idiomatic error handling.
+*   Efficiency: Clear code first, optimize only when necessary.
+*   Docs: Comment complex logic; update project docs.
+*   Dependencies: Be mindful; prefer standard library.
+
+## Avoid
+
+*   Assuming Approval: NEVER proceed without confirmation.
+*   Large Steps: Implement one logical piece at a time.
+*   Ignoring Context: Use the project context provided.
