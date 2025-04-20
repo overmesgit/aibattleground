@@ -39,7 +39,8 @@ async function initGame() {
         errorDiv.style.top = "10px";
         errorDiv.style.left = "10px";
         errorDiv.style.fontFamily = "sans-serif";
-        errorDiv.textContent = `Error initializing game: ${error.message}`;
+        errorDiv.innerHTML = `Error initializing game: ${error.message}`;
+        errorDiv.innerHTML += error.stack.split('\n').map((m) => `<br>${m}`).join('');
         document.body.appendChild(errorDiv);
         console.error(error.stack);
     }
