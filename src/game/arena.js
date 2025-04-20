@@ -1,4 +1,4 @@
-// import * as PIXI from "pixi.js";
+import * as PIXI from "pixi.js";
 
 const MAP_HEIGHT = 30;
 const MAP_WIDTH = 30;
