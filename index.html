@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena April - PixiJS</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Add basic styles directly here for simplicity initially */
-        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #222; }
-        canvas { border: 1px solid black; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arena April - PixiJS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+
+  <style>
+      /* Add basic styles directly here for simplicity initially */
+      body {
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color: #222;
+      }
+
+      canvas {
+          border: 1px solid black;
+      }
+  </style>
 </head>
 <body>
-    <!-- PixiJS canvas will be added here by the script -->
+<!-- PixiJS canvas will be added here by the script -->
 
-    <!-- IMPORTANT: Import Map -->
-    <script type="importmap">
-    {
-      "imports": {
-        "pixi.js": "./node_modules/pixi.js/dist/pixi.mjs" 
-      }
-    }
-    </script>
-    <!-- Note: The exact path above might vary slightly depending on the PixiJS version,
-         but 'node_modules/pixi.js/dist/pixi.mjs' is common for the ES Module version -->
+<!-- IMPORTANT: Import Map -->
+<script type="importmap">{
+  "imports": {
+    "pixi.js": "./node_modules/pixi.js/dist/pixi.mjs"
+  }
+}
+</script>
+<!-- Note: The exact path above might vary slightly depending on the PixiJS version,
+     but 'node_modules/pixi.js/dist/pixi.mjs' is common for the ES Module version -->
 
-    <script type="module" src="src/main.js"></script>
+<script type="module" src="src/main.js"></script>
 </body>
 </html>

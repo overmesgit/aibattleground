@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 
-const MAP_HEIGHT = 30;
-const MAP_WIDTH = 30;
+const MAP_HEIGHT = 20;
+const MAP_WIDTH = 20;
 const TILE_TEXTURE_SIZE = 32;
 
 export function generateMap(app) {
@@ -10,7 +10,6 @@ export function generateMap(app) {
 
   const scaledTileSize = app.screen.width / MAP_WIDTH;
   const mapContainer = new PIXI.Container();
-  const tileTextures = {};
 
   for (let y = 0; y < MAP_HEIGHT; y++) {
     for (let x = 0; x < MAP_WIDTH; x++) {
@@ -35,6 +34,18 @@ export function generateMap(app) {
       tileSprite.height = scaledTileSize;
 
       mapContainer.addChild(tileSprite);
+
+      const border = new PIXI.Graphics();
+      border.rect(
+        tileSprite.x,
+        tileSprite.y,
+        scaledTileSize,
+        scaledTileSize
+      );
+      border.stroke({width: 1, color: 0x006400});
+
+      // Add border to the container
+      mapContainer.addChild(border);
     }
   }
   return mapContainer;

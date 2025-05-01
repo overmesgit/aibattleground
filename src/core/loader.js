@@ -9,7 +9,6 @@ const assetsToLoad = [
     {
         alias: "tileset",
         src: "assets/images/Texture/TX Tileset Grass.png",
-        data: {scaleMode: PIXI.SCALE_MODES.NEAREST},
     },
 ];
 
